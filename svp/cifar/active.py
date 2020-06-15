@@ -182,7 +182,7 @@ def active(run_dir: str = './run',
 
     # Split the training dataset between training and validation.
     unlabeled_pool, dev_indices = utils.split_indices(
-        train_dataset, validation, run_dir, shuffle=shuffle)
+        train_dataset, validation, run_dir, shuffle=shuffle) #分离验证集， validation为验证集的样本数量
 
     # Create the proxy to select which data points to label. If the
     #   selections were precomputed in another run or elsewhere, we can
@@ -196,7 +196,7 @@ def active(run_dir: str = './run',
                                 optimizer=proxy_optimizer,
                                 learning_rate=proxy_learning_rates[0],
                                 momentum=proxy_momentum,
-                                weight_decay=proxy_weight_decay)
+                                weight_decay=proxy_weight_decay) #代理模型
 
         # Create a directory for the proxy results to avoid confusion.
         proxy_run_dir = os.path.join(run_dir, 'proxy')
@@ -212,7 +212,7 @@ def active(run_dir: str = './run',
             use_cuda=use_cuda,
             num_workers=num_workers,
             eval_num_workers=eval_num_workers,
-            indices=(unlabeled_pool, dev_indices))
+            indices=(unlabeled_pool, dev_indices)) #unlabeled_pool 数据为训练集
 
         # Create the proxy model generator (i.e., send data and get a
         #   trained model).
