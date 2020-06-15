@@ -5,6 +5,17 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
+```
+Basic
+#BasicBlock
+#StochasticBlock 
+#PreActBlock 
+#Bottleneck 
+#ResNeXtBottleneck 
+#PreActBottleneck 
+#ResNet  
+#StochasticResNet
+```
 
 class BasicBlock(nn.Module):
     expansion = 1
@@ -120,7 +131,7 @@ class PreActBlock(nn.Module):
         H += self.shortcut(inputs)
         return H
 
-
+StochasticBlock PreActBlock Bottleneck
 class Bottleneck(nn.Module):
     expansion = 4
 
@@ -209,7 +220,6 @@ class ResNeXtBottleneck(nn.Module):
 
         return outputs
 
-
 class PreActBottleneck(nn.Module):
     expansion = 4
 
@@ -251,6 +261,7 @@ class PreActBottleneck(nn.Module):
 
         H += self.shortcut(inputs)
         return H
+
 
 
 class ResNet(nn.Module):
