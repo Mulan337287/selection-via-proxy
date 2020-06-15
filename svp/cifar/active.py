@@ -188,6 +188,7 @@ def active(run_dir: str = './run',
     #   selections were precomputed in another run or elsewhere, we can
     #   ignore this step.
     if precomputed_selection is None:
+    #不存在proxy模型，创建
         # Use a partial so the appropriate model can be created without
         #   arguments.
         proxy_partial = partial(create_model_and_optimizer,
@@ -230,7 +231,7 @@ def active(run_dir: str = './run',
         next(proxy_generator)
 
     # Check that the proxy and target are different models
-    are_different_models = check_different_models(config)
+    are_different_models = check_different_models(config) #proxy模型是否和target模型一样
     # Maybe create the target.
     if train_target:
         # If the proxy and target models aren't different, we don't
@@ -238,6 +239,7 @@ def active(run_dir: str = './run',
         # * Unless the proxy wasn't created because the selections were
         #   precomputed (see above).
         if are_different_models or precomputed_selection is not None:
+          #创建不同的target_generator
             # Use a partial so the appropriate model can be created
             #   without arguments.
             target_partial = partial(create_model_and_optimizer,
@@ -279,11 +281,13 @@ def active(run_dir: str = './run',
             # Start the generator
             next(target_generator)
         else:
+            #proxy和target一致，仅需链接
             # Proxy and target are the same, so we can just symlink
             symlink_target_to_proxy(run_dir)
 
     # Perform active learning.
     if precomputed_selection is not None:
+      #存在proxy模型，将其链接到当前run_dir文件夹
         assert train_target, "Must train target if selection is precomuted"
         assert os.path.exists(precomputed_selection)
 
@@ -315,6 +319,7 @@ def active(run_dir: str = './run',
                 _, stats = target_generator.send(labeled)
                 utils.save_result(stats, os.path.join(run_dir, "target.csv"))
     else:  # Select which points to label using the proxy.
+    #若未给定事先的proxy,随机子集初始化训练proxy
         # Create initial random subset to train the proxy (warm start).
         labeled = np.random.permutation(unlabeled_pool)[:initial_subset]
         utils.save_index(labeled, run_dir,
