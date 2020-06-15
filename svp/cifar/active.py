@@ -340,11 +340,11 @@ def active(run_dir: str = './run',
                                     device=device,
                                     device_ids=device_ids,
                                     num_workers=num_workers,
-                                    use_cuda=use_cuda)
-            utils.save_result(stats, os.path.join(run_dir, 'selection.csv'))
+                                    use_cuda=use_cuda) #计算预测值和feature,进行样本选择
+            utils.save_result(stats, os.path.join(run_dir, 'selection.csv'))#
 
             # Train the proxy on the newly added data.
-            model, stats = proxy_generator.send(labeled)
+            model, stats = proxy_generator.send(labeled) #将选择的标签数据送入proxy model,更新参数
             utils.save_result(stats, os.path.join(run_dir, 'proxy.csv'))
 
             # Check whether the target model should be trained. If you
@@ -354,7 +354,7 @@ def active(run_dir: str = './run',
             should_eval = (eval_target_at is None or
                            len(eval_target_at) == 0 or
                            len(labeled) in eval_target_at)
-            if train_target and should_eval and are_different_models:
+            if train_target and should_eval and are_different_models: #在target model上验证并更新
                 # Train the target model on the selected data.
                 _, stats = target_generator.send(labeled)
                 utils.save_result(stats, os.path.join(run_dir, "target.csv"))
